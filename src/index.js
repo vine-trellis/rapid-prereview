@@ -10,6 +10,7 @@ import pino from 'express-pino-logger';
 import authRoutes from './routes/auth-routes';
 import appRoutes from './routes/app-routes';
 import apiRoutes from './routes/api-routes';
+import rssRoutes from './routes/rss-routes';
 import addDb from './middlewares/add-db';
 import { createPassport } from './utils/orcid';
 import { createRedisClient } from './utils/redis';
@@ -59,6 +60,7 @@ export function rapid(config = {}, redisClient) {
 
   app.use('/auth', authRoutes);
   app.use('/api', apiRoutes);
+  app.use('/rss', rssRoutes);
   app.use('/', appRoutes);
 
   app.use((err, req, res, next) => {
