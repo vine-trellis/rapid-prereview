@@ -348,13 +348,49 @@ router.get(
       }
     });
 
+    // let feed = Feed({        
+    //   title: 'Rapid Preprint',
+    //   link: 'test'
+    // });
+    // let data;
+ 
+
     s.pipe(
       concatStream(buffer => {
-        req.cache(JSON.parse(buffer));
+        let feed = new Feed({
+          title: 'Rapid Preprint',
+          link: 'test'
+        });
+        let data = JSON.parse(buffer);
+        req.cache(data);
+        // console.log(data);
+        data.rows.map(row => {
+          let doc = row.doc;
+          let id = doc["@id"];
+          let type = doc["@type"]
+          let actionStatus = doc.actionStatus;
+          let url = doc.object.url;
+          let agent_id = doc.agent;
+          let temp = {
+            id: id,
+            type: type,
+            actionStatus: actionStatus,
+            url: url,
+            agent_id: agent_id,
+          };
+          console.log(temp);
+          feed.addItem(temp);
+        });
+    res.send(feed.rss2());
+
+
       })
     );
 
-    s.pipe(res);
+
+    // res.send(feed.rss2())
+    // s.on('end', () => res.send(feed))
+    // s.pipe(res);
   }
 );
 
